@@ -4,8 +4,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const status = document.getElementById('status');
     const previousText = document.getElementById('previousText');
 
+    const COLORS = [
+        '(247,197,251)',  // Pink
+        '(30,86,195)',    // Blue
+        '(126,62,45)',    // Brown
+        '(209,230,209)'   // Mint
+    ];
+    // Function to get a random color from our palette
+    function getRandomColor() {
+        const randomIndex = Math.floor(Math.random() * COLORS.length);
+        return COLORS[randomIndex];
+    }
+
     // Configuration
-    const MAX_VISIBLE_WORDS = 10; // Number of words to show
+    const MAX_VISIBLE_WORDS = 4; // Number of words to show
     let storyWords = [];
 
     // Function to load initial story
@@ -55,15 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
         sendButton.disabled = true;
         
         try {
+            // Get a random color for this submission
+            const color = getRandomColor();
+
             const response = await fetch('/data', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    type: 'story_word',
+                    name: 'name',
                     word: word,
-                    timestamp: new Date().toISOString()
+                    color: color,  // Include the color in the message
                 })
             });
 

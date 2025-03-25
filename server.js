@@ -4,6 +4,33 @@ const dotenv = require('dotenv');
 const dgram = require('dgram');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
+const { exec } = require('child_process');
+
+// Function to get IP addresses using ifconfig
+function getIPAddresses(callback) {
+    exec('ifconfig | grep "inet "', (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error getting IP addresses: ${error}`);
+            return callback([]);
+        }
+        
+        const ips = stdout.split('\n')
+            .filter(line => line.trim())
+            .map(line => {
+                const parts = line.trim().split(/\s+/);
+                return {
+                    address: parts[1],
+                    netmask: parts[3],
+                    broadcast: parts[5],
+                    isRecommended: parts[1].startsWith('192.168')
+                };
+            })
+            .filter(ip => ip.address !== '127.0.0.1'); // Filter out localhost
+
+        callback(ips);
+    });
+}
 
 // Load environment variables
 dotenv.config();
@@ -50,6 +77,8 @@ app.get('/story', (req, res) => {
 app.post('/data', (req, res) => {
     try {
         const word = req.body.word;
+        const name = req.body.name;
+        const color = req.body.color;
         if (!word) {
             res.status(400).json({ error: 'No word provided' });
             return;
@@ -63,10 +92,9 @@ app.post('/data', (req, res) => {
         
         // Prepare data for TouchDesigner
         const data = JSON.stringify({
-            type: 'story_word',
+            name: name,
             word: word,
-            fullStory: fullStory.trim(),
-            timestamp: new Date().toISOString()
+            color: color, // Forward the color to TouchDesigner
         });
         
         // Send data to TouchDesigner via UDP
@@ -115,8 +143,34 @@ udpClient.on('error', (error) => {
 
 // Start server - listen on all network interfaces
 app.listen(port, '0.0.0.0', () => {
-    console.log(`Server running on http://0.0.0.0:${port}`);
-    console.log(`Access locally at http://localhost:${port}`);
-    console.log(`Sending UDP messages to TouchDesigner at ${TD_HOST}:${TD_PORT}`);
-    console.log(`Story is being saved to: ${STORY_FILE}`);
+    getIPAddresses((ipAddresses) => {
+        const recommendedIP = ipAddresses.find(ip => ip.isRecommended);
+        
+        console.log('\n=== Story Server Started ===');
+        console.log('\n📱 Connect to the Story UI:');
+        console.log('------------------------');
+        if (recommendedIP) {
+            console.log('\n✨ RECOMMENDED CONNECTION:');
+            console.log(`http://${recommendedIP.address}:${port}`);
+            console.log('(Use this address on your phone/tablet while on the same WiFi)\n');
+        }
+        
+        console.log('\nAll available addresses:');
+        console.log('------------------------');
+        console.log(`Local computer:  http://localhost:${port}`);
+        ipAddresses.forEach(ip => {
+            if (!ip.isRecommended) {
+                console.log(`Other network: http://${ip.address}:${port}`);
+            }
+        });
+        
+        console.log('\n🎨 TouchDesigner Connection:');
+        console.log('------------------------');
+        console.log(`UDP Host: ${TD_HOST}`);
+        console.log(`UDP Port: ${TD_PORT}`);
+        
+        console.log('\n📄 Story File Location:');
+        console.log('------------------------');
+        console.log(`${STORY_FILE}\n`);
+    });
 }); 
