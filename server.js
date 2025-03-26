@@ -7,29 +7,31 @@ const fs = require('fs');
 const os = require('os');
 const { exec } = require('child_process');
 
-// Function to get IP addresses using ifconfig
+// Function to get IP addresses cross-platform
 function getIPAddresses(callback) {
-    exec('ifconfig | grep "inet "', (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error getting IP addresses: ${error}`);
-            return callback([]);
-        }
+    try {
+        const networkInterfaces = os.networkInterfaces();
+        const ips = [];
         
-        const ips = stdout.split('\n')
-            .filter(line => line.trim())
-            .map(line => {
-                const parts = line.trim().split(/\s+/);
-                return {
-                    address: parts[1],
-                    netmask: parts[3],
-                    broadcast: parts[5],
-                    isRecommended: parts[1].startsWith('192.168')
-                };
-            })
-            .filter(ip => ip.address !== '127.0.0.1'); // Filter out localhost
-
+        Object.values(networkInterfaces).forEach(interfaces => {
+            interfaces.forEach(interface => {
+                // Only get IPv4 addresses and skip internal interfaces
+                if (interface.family === 'IPv4' && !interface.internal) {
+                    ips.push({
+                        address: interface.address,
+                        netmask: interface.netmask,
+                        broadcast: interface.broadcast || null, // broadcast might not exist on all platforms
+                        isRecommended: interface.address.startsWith('192.168')
+                    });
+                }
+            });
+        });
+        
         callback(ips);
-    });
+    } catch (error) {
+        console.error(`Error getting IP addresses: ${error}`);
+        callback([]);
+    }
 }
 
 // Load environment variables
