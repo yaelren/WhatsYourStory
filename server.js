@@ -113,7 +113,7 @@ app.post('/data', (req, res) => {
         fs.appendFileSync(STORY_FILE, ' ' + word);
         
         // Append name to authors file
-        fs.appendFileSync(AUTHORS_FILE, name + ' ');
+        fs.appendFileSync(AUTHORS_FILE, name + '      ');
         
         // Read updated story
         const fullStory = fs.readFileSync(STORY_FILE, 'utf8');
