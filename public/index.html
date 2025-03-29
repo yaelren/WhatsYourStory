@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>What's Your Story - Collaborative Storytelling</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 
 <body>
@@ -36,13 +37,12 @@
             </div>
 
             <div id="storyContainer" class="story">
-                Once upon a time someone ran very fast...
             </div>
 
             <form id="storyForm" class="form">
                 <div class="input-container" style="width: 200%;">
                     <input type="text" id="nextWords" class="input-field" placeholder="Next Words" required
-                        maxlength="15">
+                        maxlength="20">
                 </div>
 
                 <div class="input-container" style="width: 20%;">
@@ -50,10 +50,10 @@
                         maxlength="15">
                 </div>
 
-                <button type="submit" class="submit-button">Send</button>
+                <button id="sendButton" type="submit" class="submit-button">Send</button>
             </form>
         </section>
-        
+
         <footer class="footer">
             <div style="font-size: 14px;">presented by</div>
             <div>
