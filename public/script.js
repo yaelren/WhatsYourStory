@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const storyContainer = document.getElementById('storyContainer');
     const userName = document.getElementById('userName');
 
+    // Add text alignment to center for both inputs
+    nextWords.style.textAlign = 'center';
+    userName.style.textAlign = 'center';
+
     const COLORS = [
         '(247,197,251)',  // Pink
         '(30,86,195)',    // Blue
