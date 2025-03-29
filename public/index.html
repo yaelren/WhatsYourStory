@@ -31,8 +31,7 @@
         <section class="content">
             <div class="intro">
                 <div class="intro-text">
-                    <p>Continue our collective story.</p>
-                    <p>leave a mark - add your word</p>
+                    <p>Continue our collective story. leave a mark - add your word</p>
                 </div>
             </div>
 
@@ -40,17 +39,14 @@
             </div>
 
             <form id="storyForm" class="form">
-                <div class="input-container" style="width: 200%;">
-                    <input type="text" id="nextWords" class="input-field" placeholder="Next Words" required
-                        maxlength="20">
+                <div class="input-container">
+                    <input type="text" id="nextWords" class="input-field" placeholder="Next Words" required maxlength="20">
+                    <input type="text" id="userName" class="input-field" placeholder="Your Name" required maxlength="15">
                 </div>
-
-                <div class="input-container" style="width: 20%;">
-                    <input type="text" id="userName" class="input-field" placeholder="Your Name" required
-                        maxlength="15">
+                
+                <div class="button-container">
+                    <button id="sendButton" type="submit" class="submit-button">Send</button>
                 </div>
-
-                <button id="sendButton" type="submit" class="submit-button">Send</button>
             </form>
         </section>
 

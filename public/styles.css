@@ -78,39 +78,48 @@ main {
 
 .story {
     text-align: center;
-    font-size: 48px;
-    margin-bottom: 1rem;
+    font-size: 52px;
+    margin-bottom: 40px;
     line-height: 1.6;
 }
 
 .form {
     display: flex;
     flex-direction: column;
+    gap: 10px;
     align-items: center;
-    gap: 2rem;
 }
 
 .input-container {
     display: flex;
-    justify-content: center;
-    border-bottom: 1px solid black;
-    max-width: 400px;
-    margin: 0 auto;
+    gap: 80px;
+    margin-bottom: 40px;
     width: 100%;
+    justify-content: center;
 }
 
 .input-field {
-    width: 100%;
+    flex: none;
+    width: auto;
     text-align: left;
-    font-size: 32px;  /* default size for username */
-    padding: 1rem 0.5rem;
+    font-size: 40px;
     border: none;
+    border-bottom: 1px solid #000;
+    padding: 5px 0;
     outline: none;
-    transition: border-color 0.3s;
+}
+
+.input-field:focus {
+    border: none;
+    border-bottom: 1px solid #000;
 }
 
 #nextWords {
-    font-size: 40px;  /* larger size for next words input */
+    width: 400px;
+}
+
+#userName {
+    width: 250px;
 }
 
 .input-field::placeholder {
@@ -130,6 +139,11 @@ main {
 
 .submit-button:hover {
     background-color: #0046CC;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
 }
 
 /* Footer styles */
