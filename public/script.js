@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Configuration
-    const MAX_VISIBLE_WORDS = 7; // Number of words to show
+    const MAX_VISIBLE_WORDS = 10; // Number of words to show
     let storyWords = [];
 
     // Function to load initial story
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await gsap.to(nextWords, {
             y: -10000,
             opacity: 1,
-            duration: 2,
+            duration: 1.6,
             ease: "circ.in"
         });
 
@@ -147,8 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.success) {
                 await animateWordSubmission();
 
-                // Add new word to our story array
-                storyWords.push(word);
+                // Split the word submission into individual words and add them
+                const newWords = word.split(/\s+/);
+                storyWords.push(...newWords);  // Use spread operator to add individual words
+                
                 // Update the visible text
                 updateVisibleStory();
                 
@@ -170,6 +172,16 @@ document.addEventListener('DOMContentLoaded', () => {
     sendButton.addEventListener('click', submitWord);
     nextWords.addEventListener('keydown', handleTyping);
     nextWords.addEventListener('input', handleInputChange);
+    
+    // Hide keyboard when clicking outside inputs
+    document.body.addEventListener('click', (event) => {
+        if (event.target !== nextWords && 
+            event.target !== userName && 
+            event.target !== sendButton) {
+            nextWords.blur();
+            userName.blur();
+        }
+    });
     
     // Allow submitting with Enter key
     nextWords.addEventListener('keypress', (event) => {
