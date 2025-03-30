@@ -42,9 +42,6 @@ const port = process.env.PORT || 3000;
 const TD_HOST = process.env.TD_HOST || '127.0.0.1';
 const TD_PORT = process.env.TD_PORT || 7000;
 
-const today = new Date();
-const todayStr = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-
 // Opening lines for each day
 const openingLines = {
     0: "In the kingdom of Wix",
@@ -56,21 +53,15 @@ const openingLines = {
     6: "In the kingdom of Wix"
 };
 
-
-const STORY_FILE = path.join(__dirname, `story_${todayStr}.txt`);
-const AUTHORS_FILE = path.join(__dirname, `authors_${todayStr}.txt`);
-
-const weekday = today.getDay(); // Sunday = 0, Saturday = 6
-const index = weekday === 0 ? 0 : weekday;
-
-// Initialize story file if it doesn't exist
-if (!fs.existsSync(STORY_FILE)) {
-    fs.writeFileSync(STORY_FILE, `${openingLines[index]}`);
-}
-
-// Initialize authors file if it doesn't exist
-if (!fs.existsSync(AUTHORS_FILE)) {
-    fs.writeFileSync(AUTHORS_FILE, ``);
+// Add this function near the top of the file
+function getCurrentStoryFile() {
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    return {
+        storyFile: path.join(__dirname, `story_${todayStr}.txt`),
+        authorsFile: path.join(__dirname, `authors_${todayStr}.txt`),
+        weekday: today.getDay()
+    };
 }
 
 // Create UDP client
@@ -90,7 +81,16 @@ app.get('/', (req, res) => {
 // Get current story
 app.get('/story', (req, res) => {
     try {
-        const story = fs.readFileSync(STORY_FILE, 'utf8');
+        const { storyFile, authorsFile, weekday } = getCurrentStoryFile();
+        
+        // Check if the file exists, if not create it with the opening line
+        if (!fs.existsSync(storyFile)) {
+            const index = weekday === 0 ? 0 : weekday;
+            fs.writeFileSync(storyFile, `${openingLines[index]}`);
+            fs.writeFileSync(authorsFile, ``);
+        }
+        
+        const story = fs.readFileSync(storyFile, 'utf8');
         res.json({ story: story.trim() });
     } catch (error) {
         console.error('Error reading story file:', error);
@@ -101,22 +101,32 @@ app.get('/story', (req, res) => {
 // Main endpoint to receive data and forward to TouchDesigner
 app.post('/data', (req, res) => {
     try {
+        const { storyFile, authorsFile } = getCurrentStoryFile();
         const word = req.body.word;
         const name = req.body.name;
         const color = req.body.color;
+        
         if (!word) {
             res.status(400).json({ error: 'No word provided' });
             return;
         }
 
+        // Ensure the files exist before appending
+        if (!fs.existsSync(storyFile)) {
+            const { weekday } = getCurrentStoryFile();
+            const index = weekday === 0 ? 0 : weekday;
+            fs.writeFileSync(storyFile, `${openingLines[index]}`);
+            fs.writeFileSync(authorsFile, ``);
+        }
+
         // Append word to story file
-        fs.appendFileSync(STORY_FILE, ' ' + word);
+        fs.appendFileSync(storyFile, ' ' + word);
         
         // Append name to authors file
-        fs.appendFileSync(AUTHORS_FILE, name + '      ');
+        fs.appendFileSync(authorsFile, name + '      ');
         
         // Read updated story
-        const fullStory = fs.readFileSync(STORY_FILE, 'utf8');
+        const fullStory = fs.readFileSync(storyFile, 'utf8');
         
         // Prepare data for TouchDesigner
         const data = JSON.stringify({
@@ -198,6 +208,6 @@ app.listen(port, '0.0.0.0', () => {
         
         console.log('\n📄 Story File Location:');
         console.log('------------------------');
-        console.log(`${STORY_FILE}\n`);
+        // console.log(`${storyFile}\n`);
     });
 }); 
