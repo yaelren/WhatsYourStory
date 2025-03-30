@@ -57,9 +57,14 @@ const openingLines = {
 function getCurrentStoryFile() {
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
+    // return {
+    //     storyFile: path.join(__dirname, `story_${todayStr}.txt`),
+    //     authorsFile: path.join(__dirname, `authors_${todayStr}.txt`),
+    //     weekday: today.getDay()
+    // };
     return {
-        storyFile: path.join(__dirname, `story_${todayStr}.txt`),
-        authorsFile: path.join(__dirname, `authors_${todayStr}.txt`),
+        storyFile: path.join( 'G:/Shared drives/Studio_Video_2025/00280 What\'s Your Story/Stories', `story_${todayStr}.txt`),
+        authorsFile: path.join( 'G:/Shared drives/Studio_Video_2025/00280 What\'s Your Story/Stories', `authors_${todayStr}.txt`),
         weekday: today.getDay()
     };
 }

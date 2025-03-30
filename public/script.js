@@ -223,5 +223,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Set up periodic checks
-    setInterval(checkForNewDay, 3600000); // Check every minute
+    // setInterval(checkForNewDay, 3600000); // Check every minute
 }); 
