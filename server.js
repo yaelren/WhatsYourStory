@@ -45,7 +45,7 @@ const TD_PORT = process.env.TD_PORT || 7000;
 // Opening lines for each day
 const openingLines = {
     0: "In the kingdom of Wix",
-    1: "Long before Wix was born",
+    1: "I am greatful for...",
     2: "Our Wix journey begins when",
     3: "What I love about Wix is",
     4: "I always knew that Wix",
@@ -125,7 +125,7 @@ app.post('/data', (req, res) => {
         }
 
         // Append word to story file
-        fs.appendFileSync(storyFile, ' ' + word);
+        fs.appendFileSync(storyFile, ' ,\n' + word);
         
         // Append name to authors file
         fs.appendFileSync(authorsFile, name + '      ');
