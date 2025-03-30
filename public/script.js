@@ -126,11 +126,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check name length (max 3 words)
         const name = userName.value.trim().toUpperCase(); // Username in uppercase
         const nameWordCount = countWords(name);
-        if (nameWordCount > 3) {
-            return;
-        }
+        // if (nameWordCount > 3) {
+        //     return;
+        // }
 
-        if (!word || !name) {
+        if (!word) {
             return;
         }
 
