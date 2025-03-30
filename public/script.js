@@ -70,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.story) {
                 storyWords = data.story.split(' ');
                 updateVisibleStory();
+            } else {
+                storyWords = [];
+                updateVisibleStory();
             }
         } catch (error) {
             console.error('Error loading story:', error);
@@ -198,4 +201,26 @@ document.addEventListener('DOMContentLoaded', () => {
     loadStory().then(() => {
         nextWords.focus();
     });
+
+    // Add these functions after loadStory()
+    function getCurrentDate() {
+        return new Date().toISOString().split('T')[0];
+    }
+
+    let currentDate = getCurrentDate();
+
+    // Function to check if we need to refresh the story
+    async function checkForNewDay() {
+        console.log('Checking for new day');
+        const newDate = getCurrentDate();
+        if (newDate !== currentDate) {
+            // Date has changed, reload the story
+            currentDate = newDate;
+            storyWords = [];
+            await loadStory();
+        }
+    }
+
+    // Set up periodic checks
+    setInterval(checkForNewDay, 3600000); // Check every minute
 }); 
