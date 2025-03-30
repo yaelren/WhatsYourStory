@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to update visible story text
     function updateVisibleStory() {
+        return
         const lastWords = storyWords.slice(-MAX_VISIBLE_WORDS);
         storyContainer.textContent = lastWords.join(' ');
         
