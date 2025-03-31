@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Configuration
-    const MAX_VISIBLE_WORDS = 4; // Number of words to show
+    const MAX_VISIBLE_WORDS = 7; // Number of words to show
     let storyWords = [];
 
     // Function to load initial story

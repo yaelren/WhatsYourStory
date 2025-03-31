@@ -42,12 +42,35 @@ const port = process.env.PORT || 3000;
 const TD_HOST = process.env.TD_HOST || '127.0.0.1';
 const TD_PORT = process.env.TD_PORT || 7000;
 
-// Story file path
-const STORY_FILE = path.join(__dirname, 'story.txt');
+const today = new Date();
+const todayStr = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+
+// Opening lines for each day
+const openingLines = {
+    0: "In the kingdom of Wix",
+    1: "Long before Wix was born",
+    2: "Our Wix journey begins when",
+    3: "What I love about Wix is",
+    4: "I always knew that Wix",
+    5: "In the kingdom of Wix",
+    6: "In the kingdom of Wix"
+};
+
+
+const STORY_FILE = path.join(__dirname, `story_${todayStr}.txt`);
+const AUTHORS_FILE = path.join(__dirname, `authors_${todayStr}.txt`);
+
+const weekday = today.getDay(); // Sunday = 0, Saturday = 6
+const index = weekday === 0 ? 0 : weekday;
 
 // Initialize story file if it doesn't exist
 if (!fs.existsSync(STORY_FILE)) {
-    fs.writeFileSync(STORY_FILE, 'Once upon a time in a distant galaxy...\n');
+    fs.writeFileSync(STORY_FILE, `${openingLines[index]}`);
+}
+
+// Initialize authors file if it doesn't exist
+if (!fs.existsSync(AUTHORS_FILE)) {
+    fs.writeFileSync(AUTHORS_FILE, ``);
 }
 
 // Create UDP client
@@ -88,6 +111,9 @@ app.post('/data', (req, res) => {
 
         // Append word to story file
         fs.appendFileSync(STORY_FILE, ' ' + word);
+        
+        // Append name to authors file
+        fs.appendFileSync(AUTHORS_FILE, name + ' ');
         
         // Read updated story
         const fullStory = fs.readFileSync(STORY_FILE, 'utf8');
@@ -154,7 +180,6 @@ app.listen(port, '0.0.0.0', () => {
         if (recommendedIP) {
             console.log('\n✨ RECOMMENDED CONNECTION:');
             console.log(`http://${recommendedIP.address}:${port}`);
-            console.log('(Use this address on your phone/tablet while on the same WiFi)\n');
         }
         
         console.log('\nAll available addresses:');
