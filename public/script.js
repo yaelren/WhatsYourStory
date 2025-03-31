@@ -199,9 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Load initial story and set up the page
-    loadStory().then(() => {
-        nextWords.focus();
-    });
+    // loadStory().then(() => {
+    //     nextWords.focus();
+    // });
 
     // Add these functions after loadStory()
     function getCurrentDate() {
