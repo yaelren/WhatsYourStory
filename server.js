@@ -57,16 +57,16 @@ const openingLines = {
 function getCurrentStoryFile() {
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
-    // return {
-    //     storyFile: path.join(__dirname, `story_${todayStr}.txt`),
-    //     authorsFile: path.join(__dirname, `authors_${todayStr}.txt`),
-    //     weekday: today.getDay()
-    // };
     return {
-        storyFile: path.join( 'G:/Shared drives/Studio_Video_2025/00280 What\'s Your Story/Stories', `story_${todayStr}.txt`),
-        authorsFile: path.join( 'G:/Shared drives/Studio_Video_2025/00280 What\'s Your Story/Stories', `authors_${todayStr}.txt`),
+        storyFile: path.join(__dirname, `story_${todayStr}.txt`),
+        authorsFile: path.join(__dirname, `authors_${todayStr}.txt`),
         weekday: today.getDay()
     };
+    // return {
+    //     storyFile: path.join( 'G:/Shared drives/Studio_Video_2025/00280 What\'s Your Story/Stories', `story_${todayStr}.txt`),
+    //     authorsFile: path.join( 'G:/Shared drives/Studio_Video_2025/00280 What\'s Your Story/Stories', `authors_${todayStr}.txt`),
+    //     weekday: today.getDay()
+    // };
 }
 
 // Create UDP client
@@ -91,7 +91,7 @@ app.get('/story', (req, res) => {
         // Check if the file exists, if not create it with the opening line
         if (!fs.existsSync(storyFile)) {
             const index = weekday === 0 ? 0 : weekday;
-            fs.writeFileSync(storyFile, `${openingLines[index]}`);
+            fs.writeFileSync(storyFile, ``);
             fs.writeFileSync(authorsFile, ``);
         }
         

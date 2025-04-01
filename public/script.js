@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const spaceCount = (currentText.match(/\s/g) || []).length;
         
         // If we already have 3 spaces (4 words) and trying to add a space, prevent it
-        if (spaceCount >= 3 && event.key === ' ') {
+        if (spaceCount >= 4 && event.key === ' ') {
             event.preventDefault();
             return;
         }
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Check word count (1-4 words)
         const wordCount = countWords(word);
-        if (wordCount < 1 || wordCount > 4) {
+        if (wordCount < 1 || wordCount > 5) {
             return;
         }
 
